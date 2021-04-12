@@ -1,8 +1,9 @@
 import java.util.Scanner;
+import java.lang.*;
 
 public class Main {
     static Scanner sc = new Scanner(System.in);
-    static final int size = 4;
+    static final int size = 10;
 
     public static Book addBook(int index, Book[] library){
         System.out.println("Enter code for book "+(index+1)+": ");
@@ -31,7 +32,6 @@ public class Main {
         }
     }
 
-
     public static double sumPrice(Book[] library){
         double sum = 0;
         for (Book book: library){
@@ -40,6 +40,28 @@ public class Main {
         return sum;
     }
 
+    public static void displayLibrary(Book[] library){
+        //print library
+        for (Book book : library){
+            System.out.println(book);
+        }
+    }
+
+    public static Book[] sortByBookCode(Book[] library){
+        Book[] newLibrary = new Book[size];
+        System.arraycopy(library, 0, newLibrary, 0, size);
+
+        for (int i = 0; i < size; i++){
+            for (int j = i+1; j < size; j++){
+                if (newLibrary[i].getBookCode() > newLibrary[j].getBookCode()){
+                    Book temp = newLibrary[j];
+                    newLibrary[j] = newLibrary[i];
+                    newLibrary[i] = temp;
+                }
+            }
+        }
+        return newLibrary;
+    }
 
     public static void main(String[] args){
         Book[] library = new Book[size];
@@ -55,11 +77,7 @@ public class Main {
         for (int i = 0; i < size; i++){
             library[i] = addBook(i, library);
         }
-
-        //print library
-        for (Book book : library){
-            System.out.println(book);
-        }
+        displayLibrary(library);
 
         //compute total price of books
         System.out.println("Total price = "+sumPrice(library));
@@ -67,26 +85,16 @@ public class Main {
 
         //count programming books about Java
         int count = 0;
-        for (int i = 0; i < size/2; i++){
-            if (((ProgrammingBook) library[i]).getLanguage().equals("Java")){
-                count ++;
+        for (Book book: library){
+            if (book instanceof ProgrammingBook){
+                if (((ProgrammingBook) book).getLanguage().equals("Java")){
+                    count ++;
+                }
             }
         }
         System.out.println("Number of programming books about Java = "+count);
 
         //sort by book code
-        for (int i = 0; i < size; i++){
-            for (int j = i+1; j < size; j++){
-                if (library[i].getBookCode() > library[j].getBookCode()){
-                     Book temp = library[j];
-                     library[j] = library[i];
-                     library[i] = temp;
-                }
-            }
-        }
-
-        for (Book book : library){
-            System.out.println(book);
-        }
+        displayLibrary(sortByBookCode(library));
     }
 }
